@@ -59,6 +59,14 @@ TODO ...
 * Check usage
 `docker exec ollama ollama`
 
+## Model Experiments
+### OCR
+- Gemma3 is avaiable to OCR from an image
+  - The higher parameters the better recognizing result, i.e., 27b > 12b > 4.3b
+
+### RolmOCR 
+TODO ...
+
 ## References
 * https://hub.docker.com/r/ollama/ollama
 * https://docs.openwebui.com/
