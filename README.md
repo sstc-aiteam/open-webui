@@ -4,12 +4,15 @@
 <img width="480" alt="image" src="https://github.com/user-attachments/assets/b92a5833-6d47-4ba2-b217-fb3848ee4dbf" />
 
 ### Local
+LLM models in RTX-3070
 
-RTX-3070
 
-RTX-4090
+LLM models RTX-4090
 
 ### GCP
+#### N1+T4 GPUs
+- n1-highmem-2 (2 vCPUs, 13 GB Memory)
+- 1 x NVIDIA T4
 
 ### Mix 
 TODO ...
