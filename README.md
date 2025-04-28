@@ -4,8 +4,12 @@
 <img width="360" alt="image" src="https://github.com/user-attachments/assets/b92a5833-6d47-4ba2-b217-fb3848ee4dbf" />
 
 ### Local
-LLM models in RTX-3070
-
+LLM models in RTX-3070 .42
+| Models | Num. of Parameters |
+| ------ | ------------- |
+| llama3 | 8b  |
+| gemma3 | 4.3b |
+| gemma3 | 12b |
 
 LLM models RTX-4090
 
@@ -31,6 +35,19 @@ TODO ...
   `docker run -d -p 3000:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main`
 * Start Ollama with docker  
   `docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama`
+
+## LLMs in Ollama
+* List models  
+`docker exec ollama ollama list`
+
+* Show a model information  
+`docker exec ollama ollama show llama3`
+
+* Run a model  
+`docker exec ollama ollama run llama3`
+
+* Check usage
+`docker exec ollama ollama`
 
 ## References
 * https://hub.docker.com/r/ollama/ollama
