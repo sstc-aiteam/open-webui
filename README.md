@@ -13,9 +13,12 @@ LLM models RTX-4090
 #### N1+T4 GPUs
 - n1-highmem-2 (2 vCPUs, 13 GB Memory)
 - 1 x NVIDIA T4
+- Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
 
 ### Mix 
 TODO ...
+
+<img width="322" alt="image" src="https://github.com/user-attachments/assets/059069d5-aaf9-49fd-88a8-ef665470a3c2" />
 
 ## Quick Start
 ### GPU Support
