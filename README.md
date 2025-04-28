@@ -1,7 +1,7 @@
 # open-webui
 
 ## Environments
-<img width="480" alt="image" src="https://github.com/user-attachments/assets/b92a5833-6d47-4ba2-b217-fb3848ee4dbf" />
+<img width="360" alt="image" src="https://github.com/user-attachments/assets/b92a5833-6d47-4ba2-b217-fb3848ee4dbf" />
 
 ### Local
 LLM models in RTX-3070
