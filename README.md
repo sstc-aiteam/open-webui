@@ -24,9 +24,10 @@ LLM models RTX-4090 (.41)
 
 
 ### GCP
-#### N1+T4 GPUs
-- n1-highmem-2 (2 vCPUs, 13 GB Memory)
-- 1 x NVIDIA T4
+#### Machine type and OS
+- N1+T4 GPUs
+  - n1-highmem-2 (2 vCPUs, 13 GB Memory)
+  - 1 x NVIDIA T4
 - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
 
 ### Mix 
