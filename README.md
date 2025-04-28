@@ -4,14 +4,24 @@
 <img width="360" alt="image" src="https://github.com/user-attachments/assets/b92a5833-6d47-4ba2-b217-fb3848ee4dbf" />
 
 ### Local
-LLM models in RTX-3070 .42
+LLM models in RTX-3070 (.42)
 | Models | Num. of Parameters |
 | ------ | ------------- |
-| llama3 | 8b  |
+| deepseek-r1 | 7.6b |
 | gemma3 | 4.3b |
 | gemma3 | 12b |
+| llama3 | 8b |
+| phi4 | 14.7b |
+| TwinkleAI/Llama-3.2-3B-F1-Resoning-Instruct | 3.6b |
 
-LLM models RTX-4090
+LLM models RTX-4090 (.41)
+| Models | Num. of Parameters |
+| ------ | ------------- |
+| deepseek-r1 | 14b |
+| gemma3 | 27b |
+| llama3.3 | 70b |
+| qwen2.5 | 14b |
+
 
 ### GCP
 #### N1+T4 GPUs
