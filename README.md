@@ -26,7 +26,7 @@ LLM models RTX-4090 (.41)
 
 
 ### GCP
-#### Compute Engine - Machine type and OS
+#### [Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
 ##### Standard
 - asia-east1 (Taiwan)
 - G2 + L4 GPUs
