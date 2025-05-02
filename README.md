@@ -84,7 +84,7 @@ TODO ...
 * Check usage
 `docker exec ollama ollama`
 
-## [Use vLLM’s Official Docker Image](https://docs.vllm.ai/en/stable/deployment/docker.html)
+## [vLLM’s Official Docker Image](https://docs.vllm.ai/en/stable/deployment/docker.html)
 * [reducto/RolmOCR](https://huggingface.co/reducto/RolmOCR)  
   Note. +30G GPU Memory is required
 
