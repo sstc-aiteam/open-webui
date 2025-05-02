@@ -85,8 +85,16 @@ TODO ...
 `docker exec ollama ollama`
 
 ## [Use vLLM’s Official Docker Image](https://docs.vllm.ai/en/stable/deployment/docker.html)
+* [reducto/RolmOCR](https://huggingface.co/reducto/RolmOCR)  
+  Note. +30G GPU Memory is required
+
 ```
 docker run -d --name vllm --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface --env "HUGGING_FACE_HUB_TOKEN=<secret>" -p 8000:8000 --ipc=host vllm/vllm-openai:latest --model reducto/RolmOCR
+```
+
+* [Qwen/Qwen3-1.7B](https://huggingface.co/Qwen/Qwen3-1.7B)
+```
+docker run -d --name vllm --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface --env "HUGGING_FACE_HUB_TOKEN=<secret>" -p 8000:8000 --ipc=host vllm/vllm-openai:latest --model Qwen/Qwen3-1.7B
 ```
 
 ## LMDeploy 
