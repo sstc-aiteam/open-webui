@@ -84,6 +84,14 @@ TODO ...
 * Check usage
 `docker exec ollama ollama`
 
+## [Use vLLM’s Official Docker Image](https://docs.vllm.ai/en/stable/deployment/docker.html)
+```
+docker run -d --name vllm --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface --env "HUGGING_FACE_HUB_TOKEN=<secret>" -p 8000:8000 --ipc=host vllm/vllm-openai:latest --model reducto/RolmOCR
+```
+
+## LMDeploy 
+TODO...
+
 ## Model Experiments
 ### OCR
 - Gemma3 is avaiable to OCR from an image
