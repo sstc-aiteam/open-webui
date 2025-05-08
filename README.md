@@ -107,11 +107,14 @@ TODO...
 
 ## Model Experiments
 ### OCR
-- Gemma3 is avaiable to OCR from an image
+#### Gemma3 is avaiable to OCR from an image
   - The higher parameters the better recognizing result, i.e., 27b > 12b > 4.3b
 
-### RolmOCR 
-TODO ...
+#### RolmOCR 
+
+### Speech To Text
+#### [Whisper ASR Box](https://github.com/ahmetoner/whisper-asr-webservice)
+We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to deploy [OpenAI/Whisper](https://github.com/openai/whisper) model locally.  
 
 ## References
 * https://hub.docker.com/r/ollama/ollama
