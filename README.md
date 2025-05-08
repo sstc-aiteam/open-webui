@@ -110,7 +110,7 @@ TODO...
 #### Gemma3 is avaiable to OCR from an image
   - The higher parameters the better recognizing result, i.e., 27b > 12b > 4.3b
 
-#### RolmOCR 
+#### [RolmOCR](#reductorolmocr) 
 
 ### Speech To Text
 #### [Whisper ASR Box](https://github.com/ahmetoner/whisper-asr-webservice)
