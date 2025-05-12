@@ -57,7 +57,7 @@ TODO ... cost reduction
 ### Mix 
 TODO ...
 
-<img width="322" alt="image" src="https://github.com/user-attachments/assets/438b5374-0325-4d1e-b5bd-ebdf627b34de" />
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/438b5374-0325-4d1e-b5bd-ebdf627b34de" />
 
 
 ## Quick Start
