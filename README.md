@@ -1,4 +1,6 @@
-# open-webui
+# Open WebUI with LLM services
+# TOC
+
 
 ## Environments
 On-premise and access via VPN
