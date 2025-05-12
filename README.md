@@ -57,7 +57,8 @@ TODO ... cost reduction
 ### Mix 
 TODO ...
 
-<img width="322" alt="image" src="https://github.com/user-attachments/assets/059069d5-aaf9-49fd-88a8-ef665470a3c2" />
+<img width="322" alt="image" src="https://github.com/user-attachments/assets/438b5374-0325-4d1e-b5bd-ebdf627b34de" />
+
 
 ## Quick Start
 ### GPU Support
