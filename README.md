@@ -82,7 +82,8 @@ TODO ...
 Sign in as an Admin > `Admin Panel` > `Users` > `Add User` > change `ROLE` to `USER` 
 
 #### Create a Group and Grant models premission 
-Sign in as an Admin > `Admin Panel` > `Groups` > `Create Group` > fill `Name` and click `Create` > `Edit User Group` > select/check the Users to add and `Save`
+1. Sign in as an Admin > `Admin Panel` > `Groups` > `Create Group` > fill group `Name` and click `Create` 
+2. `Groups` > `Edit User Group` > select/check the Users to add into the group and `Save`
 
 
 
