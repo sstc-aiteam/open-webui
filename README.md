@@ -1,6 +1,12 @@
 # Open WebUI with LLM services
-# TOC
-
+- Table of Content
+  - [Environments](#environments)
+  - [Quick Start](#quick-start)
+  - [LLMs in Ollama](#llms-in-ollama)
+  - [[vLLM’s Official Docker Image](https://docs.vllm.ai/en/stable/deployment/docker.html)](#vllms-official-docker-imagehttpsdocsvllmaienstabledeploymentdockerhtml)
+  - [LMDeploy](#lmdeploy)
+  - [Model Experiments](#model-experiments)
+  - [References](#references)
 
 ## Environments
 On-premise and access via VPN
