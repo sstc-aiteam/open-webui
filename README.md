@@ -9,7 +9,8 @@
   - [vLLM’s Official Docker Image](#vllms-official-docker-image)
   - [LMDeploy](#lmdeploy)
   - [Model Experiments](#model-experiments)
-    - [OCR](#ocr) 
+    - [OCR](#ocr)
+    - [Speech To Text](#speech-to-text)
   - [References](#references)
 
 ## Environments
