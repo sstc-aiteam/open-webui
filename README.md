@@ -3,7 +3,7 @@
 ## Environments
 On-premise and access via VPN
 
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/1ae622db-d371-4019-9306-dc5979d30ffc" />
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/7706002c-aab6-45cc-9e72-2cb17a6dfb59" />
 
 ### Local
 LLM models in RTX-3070 (.42)
