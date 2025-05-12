@@ -132,10 +132,14 @@ TODO...
 
 ## Model Experiments
 ### OCR
+#### [reducto/RolmOCR](https://huggingface.co/reducto/RolmOCR) 
+  - Better than Gemma3 in terms of Accuracy and Speed, but more hardware resource required 
+
 #### Gemma3 is avaiable to OCR from an image
   - The higher parameters the better recognizing result, i.e., 27b > 12b > 4.3b
 
-#### [RolmOCR](#reductorolmocr) 
+### [OpenGVLab/InternVL3-14B](https://huggingface.co/OpenGVLab/InternVL3-14B)
+TODO ...
 
 ### Speech To Text
 #### [Whisper ASR Box](https://github.com/ahmetoner/whisper-asr-webservice)
