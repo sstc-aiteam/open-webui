@@ -1,4 +1,4 @@
-# open-webui
+![image](https://github.com/user-attachments/assets/1ee1279f-2147-4bf0-baad-731127488b3b)![image](https://github.com/user-attachments/assets/6ab19fb4-e130-435b-ae4b-4d10f412fcf6)# open-webui
 
 ## Environments
 On-premise and access via VPN
@@ -77,6 +77,10 @@ TODO ...
 * Start Ollama with docker  
   `docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama`
 
+### User, Role, Goup and Premissions
+TODO...
+
+
 ## LLMs in Ollama
 * List models  
 `docker exec ollama ollama list`
@@ -119,3 +123,5 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 ## References
 * https://hub.docker.com/r/ollama/ollama
 * https://docs.openwebui.com/
+* 
+
