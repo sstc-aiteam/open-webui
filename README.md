@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/1ee1279f-2147-4bf0-baad-731127488b3b)![image](https://github.com/user-attachments/assets/6ab19fb4-e130-435b-ae4b-4d10f412fcf6)# open-webui
+# open-webui
 
 ## Environments
 On-premise and access via VPN
