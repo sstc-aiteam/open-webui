@@ -82,11 +82,11 @@ TODO ...
 Sign in as an Admin > `Admin Panel` > `Users` > `Add User` > change `ROLE` to `USER` 
 
 #### Create a Group and Grant models premission 
-1. Sign in as an Admin > `Admin Panel` > `Groups` > `Create Group` > fill group `Name` and click `Create` 
-2. `Groups` > `Edit User Group` > select/check the Users to add into the group and `Save`
-
-
-
+- Sign in as an Admin > `Admin Panel` > `Users` > `Groups` > `+ Create Group` > fill group `Name` and click `Create`
+  -  `Groups` > `Edit User Group` > select/check the Users to add into the group and `Save`
+- Sign in as an Admin > `Admin Panel` > `Settings` > `Models` > select a model
+  - Visibility = Private
+  - Groups = select the Group that just created
 
 ## LLMs in Ollama
 * List models  
