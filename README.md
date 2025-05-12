@@ -2,7 +2,7 @@
 - Table of Content
   - [Environments](#environments)
   - [Quick Start](#quick-start)
-    - [GPU Support](gpu-support)
+    - [GPU Support](#gpu-support)
     - [CPU](#cpu)
     - [User, Role, Goup and Premissions](#user-role-goup-and-premissions)
   - [LLMs in Ollama](#llms-in-ollama)
