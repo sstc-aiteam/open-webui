@@ -1,6 +1,8 @@
 # Open WebUI with LLM services
 - Table of Content
   - [Environments](#environments)
+    - [Local](#local)
+    - [GCP](#gcp)  
   - [Quick Start](#quick-start)
     - [GPU Support](#gpu-support)
     - [CPU](#cpu)
