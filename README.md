@@ -2,10 +2,13 @@
 - Table of Content
   - [Environments](#environments)
   - [Quick Start](#quick-start)
+    - [GPU Support](gpu-support)
+    - [CPU](#cpu)
   - [LLMs in Ollama](#llms-in-ollama)
   - [vLLM’s Official Docker Image](#vllms-official-docker-imagehttpsdocsvllmaienstabledeploymentdockerhtml)
   - [LMDeploy](#lmdeploy)
   - [Model Experiments](#model-experiments)
+    - [OCR](#ocr) 
   - [References](#references)
 
 ## Environments
