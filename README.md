@@ -3,7 +3,7 @@
   - [Environments](#environments)
   - [Quick Start](#quick-start)
   - [LLMs in Ollama](#llms-in-ollama)
-  - [[vLLM’s Official Docker Image](https://docs.vllm.ai/en/stable/deployment/docker.html)](#vllms-official-docker-imagehttpsdocsvllmaienstabledeploymentdockerhtml)
+  - [vLLM’s Official Docker Image](#vllms-official-docker-imagehttpsdocsvllmaienstabledeploymentdockerhtml)
   - [LMDeploy](#lmdeploy)
   - [Model Experiments](#model-experiments)
   - [References](#references)
