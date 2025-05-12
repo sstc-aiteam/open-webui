@@ -78,7 +78,13 @@ TODO ...
   `docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama`
 
 ### User, Role, Goup and Premissions
-TODO...
+#### Create a User  
+Sign in as an Admin > `Admin Panel` > `Users` > `Add User` > change `ROLE` to `USER` 
+
+#### Create a Group and Grant models premission 
+Sign in as an Admin > `Admin Panel` > `Groups` > `Create Group` > fill `Name` and click `Create` > `Edit User Group` > select User to add
+
+
 
 
 ## LLMs in Ollama
