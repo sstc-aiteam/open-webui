@@ -131,5 +131,5 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 ## References
 * https://hub.docker.com/r/ollama/ollama
 * https://docs.openwebui.com/
-* 
+* https://github.com/ahmetoner/whisper-asr-webservice
 
