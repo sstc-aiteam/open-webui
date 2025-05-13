@@ -152,3 +152,15 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 * https://docs.openwebui.com/
 * https://github.com/ahmetoner/whisper-asr-webservice
 
+## Legacy 
+### Cost estimation of GCP T4 (issues during run newly models)
+- asia-east1 (Taiwan)
+- N1 + T4 GPUs
+  - 1 x NVIDIA T4
+  - n1-highmem-2 (2 vCPUs, 13 GB Memory)
+- Balanced persistent disk
+  - Size 100 GB
+  - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
+- Cost (2025.Apr)
+  - $258.85 USD Monthly
+  - $0.35 USD hourly
