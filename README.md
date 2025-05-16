@@ -147,6 +147,10 @@ TODO ...
 #### [Whisper ASR Box](https://github.com/ahmetoner/whisper-asr-webservice)
 We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to deploy [OpenAI/Whisper](https://github.com/openai/whisper) model locally.  
 
+#### [openai/whisper](https://github.com/openai/whisper)
+- a local python package  
+`whisper test_speech.mp3 --language Chinese --initial_prompt "繁體中文。" --model medium --device cuda`
+
 ## References
 * https://hub.docker.com/r/ollama/ollama
 * https://docs.openwebui.com/
