@@ -151,6 +151,10 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 - a local python package  
 `whisper test_speech.mp3 --language Chinese --initial_prompt "繁體中文。" --model medium --device cuda`
 
+#### [ffmpeg](https://github.com/transitive-bullshit/ffmpeg-cli-flags)
+- sampling 60 minutes from begining   
+`ffmpeg -i ${filename.aac} -t 3600 -c copy ${filename_60mins.aac}`
+
 ## References
 * https://hub.docker.com/r/ollama/ollama
 * https://docs.openwebui.com/
