@@ -7,6 +7,7 @@
     - [GPU Support](#gpu-support)
     - [CPU](#cpu)
     - [User, Role, Goup and Premissions](#user-role-goup-and-premissions)
+    - [API Endpoints](#api-endpoints)
   - [LLMs in Ollama](#llms-in-ollama)
   - [vLLM’s Official Docker Image](#vllms-official-docker-image)
   - [LMDeploy](#lmdeploy)
