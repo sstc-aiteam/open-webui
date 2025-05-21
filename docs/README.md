@@ -104,6 +104,57 @@ Sign in as an Admin > `Admin Panel` > `Users` > `Add User` > change `ROLE` to `U
   - Visibility = Private
   - Groups = select the Group that just created
 
+### [API Endpoints](https://docs.openwebui.com/getting-started/api-endpoints)
+#### [Using an Individual File in Chat Completions](https://docs.openwebui.com/getting-started/api-endpoints#using-an-individual-file-in-chat-completions)
+```
+POST http://${HOST}/api/chat/completions
+Authorization: Bearer ${KEY}
+Content-Type: application/json
+
+{
+  "model": "o4-mini",
+  "messages": [
+    {
+      "role": "developer",
+      "content": "你是一位創意的影片腳本設計師，請依下列需求，擴寫使用者輸入的腳本: 1.描述依序為：事件描述，地點描述，時間和氣氛，攝影角度與鏡頭類型，腳本不用分段. 2.使用知識庫，置換對應的名詞，不用附加參照連結. 3.分別用中文和英文輸出. 4.不翻譯知識庫置換的名詞."
+    },
+        {
+      "role": "user",
+      "content": "一隻台灣黑熊在路思義前跳舞"
+    }
+  ],
+  "files": [
+    {
+      "type": "file",
+      "id": "9a01de4e-bd67-43ea-b92f-da7598b6a13f"
+    }
+  ]
+}
+```
+
+#### [Using a Knowledge Collection in Chat Completions](https://docs.openwebui.com/getting-started/api-endpoints#using-a-knowledge-collection-in-chat-completions)
+```
+{
+  "model": "o4-mini",
+  "messages": [
+    {
+      "role": "developer",
+      "content": "你是一位創意的影片腳本設計師，請依下列需求，擴寫使用者輸入的腳本: 1.全中文描述. 2.描述依序為：事件描述，地點描述，時間和氣氛，攝影角度與鏡頭類型，腳本不用分段. 3.使用知識庫，置換對應的名詞，不用附加參照連結."
+    },
+        {
+      "role": "user",
+      "content": "一隻台灣黑熊在路思義前跳舞"
+    }
+  ],
+  "files": [
+    {
+      "type": "collection",
+      "id": "b358e2d8-7a46-44e3-ad2e-6c7e3e832b4b"
+    }
+  ]
+}
+```
+
 ## LLMs in Ollama
 * List models  
 `docker exec ollama ollama list`
