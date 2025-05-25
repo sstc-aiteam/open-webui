@@ -205,9 +205,9 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 
 ### Tools
 #### [ffmpeg](https://github.com/transitive-bullshit/ffmpeg-cli-flags)
-- sampling 60 minutes from begining
+- sampling 60 minutes from begining  
   `ffmpeg -i ${filename.aac} -t 3600 -c copy ${filename_60mins.aac}`
-- convert format from AAC to MP#
+- convert format from AAC to MP#  
   `ffmpeg -i ${filename.aac} ${filename.mp3}`
 
 ## References
