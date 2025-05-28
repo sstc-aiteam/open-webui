@@ -40,11 +40,7 @@ LLM models RTX-4090 (.41)
 | llama3.3 | 70b |
 | qwen2.5 | 14b |
 
-
-### GCP
-#### [Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
-
-### Mix 
+### Mix - GCP with Local
 ![image](https://github.com/user-attachments/assets/817daa0f-5b19-431f-8ecf-4fd041c40da2)
 
 
@@ -194,6 +190,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 
 ### Cost estimation
 #### GCE
+- [Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
 - asia-east1 (Taiwan)
 - G2 + L4 GPUs
   - 1 x NVIDIA L4
