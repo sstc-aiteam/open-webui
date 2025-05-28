@@ -41,11 +41,7 @@ LLM models RTX-4090 (.41)
 | qwen2.5 | 14b |
 
 ### Mix - GCP with Local
-![image](https://github.com/user-attachments/assets/817daa0f-5b19-431f-8ecf-4fd041c40da2)
-
-
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/438b5374-0325-4d1e-b5bd-ebdf627b34de"/>
-
+![image](https://github.com/user-attachments/assets/924760ae-0391-4d3e-86fb-35c013f3c096)
 
 ## Quick Start
 ### GPU Support
