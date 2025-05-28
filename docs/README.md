@@ -43,35 +43,10 @@ LLM models RTX-4090 (.41)
 
 ### GCP
 #### [Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
-##### Standard
-- asia-east1 (Taiwan)
-- G2 + L4 GPUs
-  - 1 x NVIDIA L4
-  - g2-standard-4 (4 vCPUs, 16 GB Memory)
-- Balanced persistent disk
-  - Size 100 GB
-  - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
-- Cost (2025.Apr)
-  - $607.46 USD Monthly
-  - $0.83 USD hourly
-
-##### Legacy (issues during run newly models)
-- asia-east1 (Taiwan)
-- N1 + T4 GPUs
-  - 1 x NVIDIA T4
-  - n1-highmem-2 (2 vCPUs, 13 GB Memory)
-- Balanced persistent disk
-  - Size 100 GB
-  - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
-- Cost (2025.Apr)
-  - $258.85 USD Monthly
-  - $0.35 USD hourly
-
-#### Cloud Run
-TODO ... cost reduction
 
 ### Mix 
-TODO ...
+![image](https://github.com/user-attachments/assets/817daa0f-5b19-431f-8ecf-4fd041c40da2)
+
 
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/438b5374-0325-4d1e-b5bd-ebdf627b34de"/>
 
@@ -217,8 +192,25 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 * https://github.com/SYSTRAN/faster-whisper
 * https://github.com/ahmetoner/whisper-asr-webservice
 
+### Cost estimation
+#### GCE
+- asia-east1 (Taiwan)
+- G2 + L4 GPUs
+  - 1 x NVIDIA L4
+  - g2-standard-4 (4 vCPUs, 16 GB Memory)
+- Balanced persistent disk
+  - Size 100 GB
+  - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
+- Cost (2025.Apr)
+  - $607.46 USD Monthly
+  - $0.83 USD hourly
+
+#### Cloud Run
+TODO ... cost reduction
+
 ## Legacy 
 ### Cost estimation of GCP T4 (issues during run newly models)
+##### Legacy (issues during run newly models)
 - asia-east1 (Taiwan)
 - N1 + T4 GPUs
   - 1 x NVIDIA T4
@@ -229,3 +221,6 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 - Cost (2025.Apr)
   - $258.85 USD Monthly
   - $0.35 USD hourly
+
+
+
