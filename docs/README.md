@@ -165,6 +165,7 @@ TODO ...
 ### Speech To Text
 #### [Whisper ASR Box](https://github.com/ahmetoner/whisper-asr-webservice)
 We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to deploy [OpenAI/Whisper](https://github.com/openai/whisper) model locally.  
+`docker run -d --gpus all --name whisper -p 9000:9000 -e ASR_MODEL=medium -e ASR_ENGINE=openai_whisper onerahmet/openai-whisper-asr-webservice:v1.7.1-gpu`
 
 #### [openai/whisper](https://github.com/openai/whisper)
 - a local python package  
