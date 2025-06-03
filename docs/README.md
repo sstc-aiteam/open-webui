@@ -48,7 +48,7 @@ LLM models RTX-4090 (.41)
 ## Quick Start
 ### GPU Support
 * [Start Open WebUI with docker](https://docs.openwebui.com/getting-started/quick-start/#using-gpu-support)  
-  `docker run -d -p 3000:8080 --gpus all -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:cuda` 
+  `docker run -d -p 3000:8080 --gpus all -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:0.6.13-cuda` 
 
 * [Start Ollama with docker](https://hub.docker.com/r/ollama/ollama)
   * [Install NVIDIA Container Toolkit](https://hub.docker.com/r/ollama/ollama)⁠
@@ -58,7 +58,7 @@ LLM models RTX-4090 (.41)
 
 ### CPU
 * Start Open WebUI with docker  
-  `docker run -d -p 3000:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main`
+  `docker run -d -p 3000:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:0.6.5`
   
 * Start Ollama with docker  
   `docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama`
