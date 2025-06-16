@@ -185,6 +185,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 * https://github.com/openai/whisper
 * https://github.com/SYSTRAN/faster-whisper
 * https://github.com/ahmetoner/whisper-asr-webservice
+* [Softether Ad-hoc VPN](https://www.softether.org/4-docs/2-howto/1.VPN_for_On-premise/1.Ad-hoc_VPN) 
 * [ComfyUI Tutorial Series: Ep10 - Flux GGUF and Custom Nodes](https://www.youtube.com/watch?v=Ym0oJpRbj4U)
 
 
