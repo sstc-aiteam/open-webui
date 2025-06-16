@@ -189,21 +189,9 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 
 
 ## Legacy 
-### Cost estimation
-#### [GCP Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
+### Cost estimation of GCP Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
+#### G2 + L4 GPUs
 - asia-east1 (Taiwan)
-- N1 + T4 GPUs (issues during run newly models)
-  - 1 x NVIDIA T4
-  - n1-highmem-2 (2 vCPUs, 13 GB Memory)
-- Balanced persistent disk
-  - Size 100 GB
-  - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
-- Cost (2025.Apr)
-  - $258.85 USD Monthly
-  - $0.35 USD hourly
- 
-- asia-east1 (Taiwan)
-- G2 + L4 GPUs
   - 1 x NVIDIA L4
   - g2-standard-4 (4 vCPUs, 16 GB Memory)
 - Balanced persistent disk
@@ -212,6 +200,17 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 - Cost (2025.Apr)
   - $607.46 USD Monthly
   - $0.83 USD hourly
+
+#### N1 + T4 GPUs (issues during run newly models)
+- asia-east1 (Taiwan)
+  - 1 x NVIDIA T4
+  - n1-highmem-2 (2 vCPUs, 13 GB Memory)
+- Balanced persistent disk
+  - Size 100 GB
+  - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
+- Cost (2025.Apr)
+  - $258.85 USD Monthly
+  - $0.35 USD hourly
 
 ![image](https://github.com/user-attachments/assets/baa2d2a9-3429-47d2-92ca-8467957cec01)
 
