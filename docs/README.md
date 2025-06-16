@@ -43,11 +43,6 @@ LLM models RTX-4090 (.41)
 ### Mix - GCP with Local
 ![image](https://github.com/user-attachments/assets/5487aafa-3b57-4f2f-96b8-c9009fd177b5)
 
-![image](https://github.com/user-attachments/assets/baa2d2a9-3429-47d2-92ca-8467957cec01)
-
-![image](https://github.com/user-attachments/assets/42ee96ee-1325-4f78-814a-363117f57360)
-
-
 ## Quick Start
 ### GPU Support
 * [Start Open WebUI with docker](https://docs.openwebui.com/getting-started/quick-start/#using-gpu-support)  
@@ -192,9 +187,21 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 * https://github.com/ahmetoner/whisper-asr-webservice
 * [ComfyUI Tutorial Series: Ep10 - Flux GGUF and Custom Nodes](https://www.youtube.com/watch?v=Ym0oJpRbj4U)
 
+
+## Legacy 
 ### Cost estimation
-#### GCE
-- [Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
+#### [GCP Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
+- asia-east1 (Taiwan)
+- N1 + T4 GPUs (issues during run newly models)
+  - 1 x NVIDIA T4
+  - n1-highmem-2 (2 vCPUs, 13 GB Memory)
+- Balanced persistent disk
+  - Size 100 GB
+  - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
+- Cost (2025.Apr)
+  - $258.85 USD Monthly
+  - $0.35 USD hourly
+ 
 - asia-east1 (Taiwan)
 - G2 + L4 GPUs
   - 1 x NVIDIA L4
@@ -206,22 +213,9 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
   - $607.46 USD Monthly
   - $0.83 USD hourly
 
-#### Cloud Run
-TODO ... cost reduction
+![image](https://github.com/user-attachments/assets/baa2d2a9-3429-47d2-92ca-8467957cec01)
 
-## Legacy 
-### Cost estimation of GCP T4 (issues during run newly models)
-##### Legacy (issues during run newly models)
-- asia-east1 (Taiwan)
-- N1 + T4 GPUs
-  - 1 x NVIDIA T4
-  - n1-highmem-2 (2 vCPUs, 13 GB Memory)
-- Balanced persistent disk
-  - Size 100 GB
-  - Deep Learning On Linux - Deep Learning VM with CUDA 12.3 M129
-- Cost (2025.Apr)
-  - $258.85 USD Monthly
-  - $0.35 USD hourly
+![image](https://github.com/user-attachments/assets/42ee96ee-1325-4f78-814a-363117f57360)
 
 
 
