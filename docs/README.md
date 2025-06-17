@@ -190,7 +190,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 
 
 ## Legacy 
-### Cost estimation of GCP Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
+### Cost estimation of [GCP Compute Engine - Machine type](https://cloud.google.com/compute/docs/gpus) and OS
 #### G2 + L4 GPUs
 - asia-east1 (Taiwan)
   - 1 x NVIDIA L4
