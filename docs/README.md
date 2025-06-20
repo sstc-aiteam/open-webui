@@ -148,9 +148,6 @@ docker run -d --name vllm --gpus all -v ~/.cache/huggingface:/root/.cache/huggin
 docker run -d --name vllm --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface --env "HUGGING_FACE_HUB_TOKEN=<secret>" -p 8000:8000 --ipc=host vllm/vllm-openai:latest --model Qwen/Qwen3-1.7B
 ```
 
-## LMDeploy 
-TODO...
-
 ## Model Experiments
 ### OCR
 #### [reducto/RolmOCR](https://huggingface.co/reducto/RolmOCR) 
