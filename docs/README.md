@@ -179,10 +179,10 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 `ffmpeg -i ${filename.aac} ${filename.mp3}`
 
 #### [Docker](https://docs.docker.com/reference/cli/docker/)
-- [check container log](https://docs.docker.com/reference/cli/docker/container/logs/) (sudo privilege required)
-  `docker logs -f open-webui` 
-- enter into container shell
-  `docker exec -it open-webui /bin/bash`
+- [check container log](https://docs.docker.com/reference/cli/docker/container/logs/) (sudo privilege required)  
+`docker logs -f open-webui`
+- enter into container shell  
+`docker exec -it open-webui /bin/bash`
 
 
 ## References
