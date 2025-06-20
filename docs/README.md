@@ -10,7 +10,6 @@
     - [API Endpoints](#api-endpoints)
   - [LLMs in Ollama](#llms-in-ollama)
   - [vLLM’s Official Docker Image](#vllms-official-docker-image)
-  - [LMDeploy](#lmdeploy)
   - [Model Experiments](#model-experiments)
     - [OCR](#ocr)
     - [Speech To Text](#speech-to-text)
