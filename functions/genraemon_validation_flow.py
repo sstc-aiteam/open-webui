@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List, Callable, Awaitable, Union
 from fastapi import Request
 from open_webui.models.users import Users
+from open_webui.utils.chat import generate_chat_completion
 from open_webui.routers.images import image_generations, GenerateImageForm
 from open_webui.utils.misc import get_last_user_message
 from open_webui.config import UPLOAD_DIR, DATA_DIR
@@ -20,9 +21,6 @@ class Pipe:
     class Valves(BaseModel):
         image_generation_timeout: int = Field(
             default=60, description="Timeout for image generation in seconds"
-        )
-        max_prompt_length: int = Field(
-            default=1000, description="Maximum length of user prompt"
         )
         enable_debug_logging: bool = Field(
             default=False, description="Enable debug logging"
@@ -42,6 +40,35 @@ class Pipe:
         self.log = logging.getLogger("GenraVF.pipe")
         if self.valves.enable_debug_logging:
             self.log.setLevel(logging.DEBUG)
+
+    async def _emit_status(
+        self,
+        emit_event: Callable[[Dict[str, Any]], Awaitable[None]],
+        description: str,
+        done: bool,
+    ):
+        """Helper function to emit a status update."""
+        if emit_event:
+            await emit_event(
+                {
+                    "type": "status",
+                    "data": {"description": description, "done": done},
+                }
+            )
+
+    async def _emit_message(
+        self,
+        emit_event: Callable[[Dict[str, Any]], Awaitable[None]],
+        content: str,
+    ):
+        """Helper function to emit a status update."""
+        if emit_event:
+            await emit_event(
+                {
+                    "type": "chat:message",
+                    "data": {"content": content},
+                }
+            )
 
     def _get_image_file_path(self, image_data: dict) -> Optional[str]:
         """Get the local file path for an image from Open WebUI's storage."""
@@ -154,7 +181,8 @@ class Pipe:
         """Convert image bytes to base64 data URL."""
         try:
             # Resize if needed
-            processed_bytes = self._resize_image_if_needed(image_bytes)
+            # processed_bytes = self._resize_image_if_needed(image_bytes)
+            processed_bytes = image_bytes
 
             # Determine MIME type
             if original_format:
@@ -239,26 +267,13 @@ class Pipe:
 
         # Validate prompt
         if not user_prompt or not user_prompt.strip():
-            if __event_emitter__:
-                await __event_emitter__(
-                    {
-                        "type": "status",
-                        "data": {
-                            "description": "Error: Prompt cannot be empty",
-                            "done": True,
-                        },
-                    }
-                )
+            await self._emit_status(
+                __event_emitter__, "Error: Prompt cannot be empty", True
+            )
             return []
 
         # Emit status
-        if __event_emitter__:
-            await __event_emitter__(
-                {
-                    "type": "status",
-                    "data": {"description": "Generating images...", "done": False},
-                }
-            )
+        await self._emit_status(__event_emitter__, "Generating images...", False)
 
         try:
             # Get user object
@@ -277,43 +292,26 @@ class Pipe:
             )
 
             if not images:
-                if __event_emitter__:
-                    await __event_emitter__(
-                        {
-                            "type": "status",
-                            "data": {
-                                "description": "No images were generated",
-                                "done": True,
-                            },
-                        }
-                    )
+                await self._emit_status(
+                    __event_emitter__, "No images were generated", True
+                )
                 return []
 
             # Update status
-            if __event_emitter__:
-                await __event_emitter__(
-                    {
-                        "type": "status",
-                        "data": {
-                            "description": f"Processing {len(images)} generated image(s)...",
-                            "done": False,
-                        },
-                    }
-                )
+            await self._emit_status(
+                __event_emitter__,
+                f"Processing {len(images)} generated image(s)...",
+                False,
+            )
 
             # Process images to base64 using internal access
             processed_images = []
             for i, image in enumerate(images):
-                if __event_emitter__:
-                    await __event_emitter__(
-                        {
-                            "type": "status",
-                            "data": {
-                                "description": f"Converting image {i+1}/{len(images)} to base64...",
-                                "done": False,
-                            },
-                        }
-                    )
+                await self._emit_status(
+                    __event_emitter__,
+                    f"Converting image {i+1}/{len(images)} to base64...",
+                    False,
+                )
 
                 processed_image = await self._process_image_to_base64_internal(image)
                 processed_images.append(processed_image)
@@ -322,16 +320,11 @@ class Pipe:
             successful_images = [
                 img for img in processed_images if img["base64"] and not img["error"]
             ]
-            if __event_emitter__:
-                await __event_emitter__(
-                    {
-                        "type": "status",
-                        "data": {
-                            "description": f"Successfully processed {len(successful_images)}/{len(images)} images",
-                            "done": True,
-                        },
-                    }
-                )
+            await self._emit_status(
+                __event_emitter__,
+                f"Successfully processed {len(successful_images)}/{len(images)} images",
+                True,
+            )
 
             return processed_images
 
@@ -379,25 +372,6 @@ class Pipe:
 
         return "\n\n".join(response_parts)
 
-    def _extract_user_prompt(self, body: dict) -> str:
-        """Extract user prompt from request body."""
-        messages = body.get("messages", [])
-        if not messages:
-            return ""
-
-        last_message = messages[-1]
-        content = last_message.get("content", "")
-
-        if isinstance(content, str):
-            return content.strip()
-        elif isinstance(content, list):
-            text_parts = [
-                part.get("text", "") for part in content if part.get("type") == "text"
-            ]
-            return " ".join(text_parts).strip()
-
-        return ""
-
     async def pipe(
         self,
         body: dict,
@@ -410,19 +384,67 @@ class Pipe:
 
         self.log.info(f"Pipe started with task: {__task__}")
 
-        # Skip system tasks
-        if __task__ in ["title_generation", "tag_generation"]:
-            self.log.info(f"Skipping system task: {__task__}")
-            return "Task skipped"
+        # Skip system tasks, e.g. title_generation, tags_generation
+        if __task__ is not None:
+            m = f"{__task__} task skipped"
+            self.log.info(m)
+            return m
+
+        self.log.info(f"body: {body}")
 
         try:
-            # Extract user prompt
-            user_prompt = self._extract_user_prompt(body)
-            if not user_prompt:
-                error_msg = "No user prompt found in the request"
-                self.log.warning(error_msg)
-                return f"Error: {error_msg}"
+            # Writing expansion
+            body["model"] = "genraemon"
+            user = Users.get_user_by_id(__user__["id"])
+            expansion_stream = await generate_chat_completion(
+                __request__,
+                body,
+                user,
+            )
 
+            full_expansion = ""
+            # Get full_expansion from streaming result via .body_iterator with async generator
+            async for chunk_bytes in expansion_stream.body_iterator:
+                # decode the bytes into a string
+                chunk = chunk_bytes.decode("utf-8")
+
+                if chunk.strip():
+                    if chunk.startswith("data: "):
+                        chunk_data_str = chunk[len("data: ") :].strip()
+                        if chunk_data_str == "[DONE]":
+                            break
+                        try:
+                            chunk_data = json.loads(chunk_data_str)
+                            if (
+                                "choices" in chunk_data
+                                and len(chunk_data["choices"]) > 0
+                                and "delta" in chunk_data["choices"][0]
+                                and "content" in chunk_data["choices"][0]["delta"]
+                            ):
+                                content = chunk_data["choices"][0]["delta"]["content"]
+                                if content:
+                                    full_expansion += content
+                        except json.JSONDecodeError:
+                            self.log.error(
+                                f"Failed to decode JSON from chunk: {chunk_data_str}"
+                            )
+                            continue
+
+            expansion_dict = json.loads(full_expansion)
+            zh_expansion = expansion_dict["zh"]
+            en_expansion = expansion_dict["en"]
+            self.log.info(f"Complete Assistant Message: {full_expansion}")
+            self.log.info(f"Chinese expansion: {zh_expansion}")
+            self.log.info(f"English expansion: {en_expansion}")
+
+            await self._emit_message(__event_emitter__, f"{full_expansion}")
+
+            # Set user prompt
+            # == test only ==
+            # self.log.info(f"Request body: {body}")
+            # messages = body.get("messages", [])
+            # user_prompt = get_last_user_message(messages)
+            user_prompt = en_expansion
             self.log.info(f"Processing prompt: {user_prompt[:100]}...")
 
             # Generate and process images using internal access
@@ -439,7 +461,7 @@ class Pipe:
             self.log.info(
                 f"Pipe completed successfully with {len(processed_images)} images"
             )
-            return response
+            return response + full_expansion
 
         except Exception as e:
             error_msg = f"Pipe execution failed: {str(e)}"
