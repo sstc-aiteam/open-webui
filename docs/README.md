@@ -189,6 +189,21 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 - [enter into container's shell](https://docs.docker.com/reference/cli/docker/container/exec/)  
 `docker exec -it open-webui /bin/bash`
 
+#### VPN
+- Enable VPM Client network Adapter
+`vpnclient start`
+
+- [Temporary IP address assignment](https://documentation.ubuntu.com/server/explanation/networking/configuring-networks/#temporary-ip-address-assignment)  
+`ip addr add 10.102.66.200/24 dev enp0s25`
+
+- Connect to VPN Server (Virtual Hub)
+```
+vpncmd # select 2 and Enter
+VPN Client>accountlist
+VPN Client>AccountConnect ${VPN Connection Setting Name}
+VPN Client>accountstatusget ${VPN Connection Setting Name}
+```
+
 
 ## References
 * https://hub.docker.com/r/ollama/ollama
