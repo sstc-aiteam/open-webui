@@ -190,7 +190,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 `docker exec -it open-webui /bin/bash`
 
 #### VPN
-- Enable VPM Client network Adapter
+- Enable VPM Client network Adapter  
 `vpnclient start`
 
 - [Temporary IP address assignment](https://documentation.ubuntu.com/server/explanation/networking/configuring-networks/#temporary-ip-address-assignment)  
