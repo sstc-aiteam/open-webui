@@ -171,15 +171,15 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 - a local python package  
 `whisper test_speech.mp3 --language Chinese --initial_prompt "繁體中文。" --model medium --device cuda`
 
-### Tools
-#### [ffmpeg](https://github.com/transitive-bullshit/ffmpeg-cli-flags)
+## Tools
+### [ffmpeg](https://github.com/transitive-bullshit/ffmpeg-cli-flags)
 - sampling 60 minutes from begining  
 `ffmpeg -i ${filename.aac} -t 3600 -c copy ${filename_60mins.aac}`\
 
 - convert format from AAC to MP#  
 `ffmpeg -i ${filename.aac} ${filename.mp3}`
 
-#### [Docker](https://docs.docker.com/reference/cli/docker/)
+### [Docker](https://docs.docker.com/reference/cli/docker/)
 - [check running containers](https://docs.docker.com/reference/cli/docker/container/ls/)  
 `docker ps`
 
@@ -189,7 +189,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 - [enter into container's shell](https://docs.docker.com/reference/cli/docker/container/exec/)  
 `docker exec -it open-webui /bin/bash`
 
-#### VPN
+### VPN
 - Enable VPM Client network Adapter  
 `vpnclient start`
 
@@ -203,6 +203,10 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
   VPN Client>AccountConnect ${VPN Connection Setting Name}
   VPN Client>accountstatusget ${VPN Connection Setting Name}
   ```
+
+## [Local Development](https://docs.openwebui.com/getting-started/advanced-topics/development/)
+- Build docker images with GPU enabled version under `linux/amd64`(x86) platform  
+`docker buildx build --no-cache --platform linux/amd64 -t open-webui-diar:cuda --build-arg USE_CUDA=true --build-arg USE_CUDA_VER=cu121`
 
 
 ## References
