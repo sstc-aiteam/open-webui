@@ -206,7 +206,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
   ```
 
 ## [Local Development](https://docs.openwebui.com/getting-started/advanced-topics/development/)
-- Build docker images with GPU enabled version under `linux/amd64`(x86) platform  
+- Build docker images with GPU enabled version under `linux/amd64 (x86)` platform  
 `docker buildx build --no-cache --platform linux/amd64 -t open-webui-diar:cuda --build-arg USE_CUDA=true --build-arg USE_CUDA_VER=cu121`
 
 
