@@ -209,7 +209,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 - Build docker images with GPU enabled version under `linux/amd64 (x86)` platform  
 `docker buildx build --no-cache --platform linux/amd64 -t sstcaiteam/open-webui:v0.6.14-diar-cuda --build-arg USE_CUDA=true --build-arg USE_CUDA_VER=cu121 .`
 
-- Push to Docker Hub
+- Push to Docker Hub  
 `docker login`  
 `docker push sstcaiteam/open-webui:v0.6.14-diar-cuda`
 
