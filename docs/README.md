@@ -174,6 +174,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 `whisper test_speech.mp3 --language Chinese --initial_prompt "繁體中文。" --model medium --device cuda`
 
 ### Text To Image
+#### [ComfyUI-Docker](https://github.com/YanWenKun/ComfyUI-Docker)
 `docker run -d -it --name comfyui --gpus all -p 8188:8188 -v "$(pwd)"/storage:/root -e CLI_ARGS="" yanwk/comfyui-boot:cu124-slim`
 
 
