@@ -13,6 +13,7 @@
   - [Model Experiments](#model-experiments)
     - [OCR](#ocr)
     - [Speech To Text](#speech-to-text)
+    - [Text To Image](#text-to-image)
   - [Tools](#tools)
     - [ffmpeg](#ffmpeg)
     - [docker](#docker)
@@ -171,6 +172,10 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 #### [openai/whisper](https://github.com/openai/whisper)
 - a local python package  
 `whisper test_speech.mp3 --language Chinese --initial_prompt "繁體中文。" --model medium --device cuda`
+
+### Text To Image
+`docker run -d -it --name comfyui --gpus all -p 8188:8188 -v "$(pwd)"/storage:/root -e CLI_ARGS="" yanwk/comfyui-boot:cu124-slim`
+
 
 ## Tools
 ### [ffmpeg](https://github.com/transitive-bullshit/ffmpeg-cli-flags)
