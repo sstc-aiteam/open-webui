@@ -12,7 +12,7 @@ from fastapi import Request
 from open_webui.models.users import Users
 from open_webui.utils.chat import generate_chat_completion
 from open_webui.routers.images import image_generations, GenerateImageForm
-from open_webui.utils.misc import get_last_user_message
+from open_webui.utils.misc import get_last_user_message, get_last_user_message_item
 from open_webui.config import UPLOAD_DIR, DATA_DIR
 from open_webui.models.files import Files
 
@@ -215,7 +215,7 @@ class Pipe:
         return format_map.get(ext, "jpeg")
 
     async def _process_image_to_base64_internal(self, image_data: dict) -> dict:
-        """Process a single image to base64 using internal file access."""
+        """Process a single image to base64 from local image file path."""
         result = {
             "base64": "",
             "url": image_data.get("url", ""),
@@ -337,12 +337,15 @@ class Pipe:
                 )
             return []
 
-    def _format_images_for_response(self, processed_images: List[dict]) -> str:
+    def _format_images_for_response(
+        self, processed_images: List[dict]
+    ) -> (str, List[str]):
         """Format processed images for the response."""
         if not processed_images:
             return "No images were generated."
 
         response_parts = []
+        response_b64imgs = []
         successful_count = 0
 
         for i, img_data in enumerate(processed_images):
@@ -351,6 +354,7 @@ class Pipe:
                 response_parts.append(
                     f"![Generated Image {successful_count}]({img_data['base64']})"
                 )
+                response_b64imgs.append(img_data["base64"])
 
                 # Add debug info if enabled
                 if self.valves.enable_debug_logging and img_data.get("file_path"):
@@ -370,7 +374,7 @@ class Pipe:
                 f"\n*Successfully generated {successful_count} out of {len(processed_images)} images.*"
             )
 
-        return "\n\n".join(response_parts)
+        return "\n\n".join(response_parts), response_b64imgs
 
     async def pipe(
         self,
@@ -390,7 +394,7 @@ class Pipe:
             self.log.info(m)
             return m
 
-        self.log.info(f"body: {body}")
+        # self.log.info(f"body: {body}")
 
         try:
             # Writing expansion
@@ -456,12 +460,58 @@ class Pipe:
             )
 
             # Format and return response
-            response = self._format_images_for_response(processed_images)
-
+            respimgs_str, b64imgs = self._format_images_for_response(processed_images)
             self.log.info(
                 f"Pipe completed successfully with {len(processed_images)} images"
             )
-            return response + full_expansion
+
+            messages = body.get("messages", [])
+            last_content_text = get_last_user_message(messages)
+            last_msg_item = get_last_user_message_item(messages)
+            if last_msg_item and last_content_text:
+                last_msg_item["content"] = [
+                    {"type": "text", "text": last_content_text},
+                    {"type": "image_url", "image_url": {"url": b64imgs[0]}},
+                ]
+
+                body["messages"] = [last_msg_item]
+                body["model"] = "genraemon-image--sentence"
+                # self.log.info(json.dumps(body, ensure_ascii=False))
+
+                similar_info = "相似度分析 - 使用者輸入 vs. 生成圖片:\n"
+                similar_info_stream = await generate_chat_completion(
+                    __request__, body, user
+                )
+                # Get full_expansion from streaming result via .body_iterator with async generator
+                async for chunk_bytes in similar_info_stream.body_iterator:
+                    # decode the bytes into a string
+                    chunk = chunk_bytes.decode("utf-8")
+
+                    if chunk.strip():
+                        if chunk.startswith("data: "):
+                            chunk_data_str = chunk[len("data: ") :].strip()
+                            if chunk_data_str == "[DONE]":
+                                break
+                            try:
+                                chunk_data = json.loads(chunk_data_str)
+                                if (
+                                    "choices" in chunk_data
+                                    and len(chunk_data["choices"]) > 0
+                                    and "delta" in chunk_data["choices"][0]
+                                    and "content" in chunk_data["choices"][0]["delta"]
+                                ):
+                                    content = chunk_data["choices"][0]["delta"][
+                                        "content"
+                                    ]
+                                    if content:
+                                        similar_info += content
+                            except json.JSONDecodeError:
+                                self.log.error(
+                                    f"Failed to decode JSON from chunk: {chunk_data_str}"
+                                )
+                                continue
+
+            return "\n\n".join([respimgs_str, full_expansion, similar_info])
 
         except Exception as e:
             error_msg = f"Pipe execution failed: {str(e)}"
