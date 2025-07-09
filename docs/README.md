@@ -183,7 +183,7 @@ We apply ahmetoner's https://github.com/ahmetoner/whisper-asr-webservice to depl
 - sampling 60 minutes from begining  
 `ffmpeg -i ${filename.aac} -t 3600 -c copy ${filename_60mins.aac}`
 
-- convert format from AAC to MP#  
+- convert format from AAC to MP3  
 `ffmpeg -i ${filename.aac} ${filename.mp3}`
 
 ### [Docker](https://docs.docker.com/reference/cli/docker/)
