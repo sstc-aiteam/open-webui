@@ -288,6 +288,12 @@
 				fileItem.url = `${WEBUI_API_BASE_URL}/files/${uploadedFile.id}`;
 
 				files = files;
+
+				// If the file is an audio file, append the content to the User Prompt.
+				if (file.type.startsWith('audio/')) {
+					let c = uploadedFile?.data?.content ?? '';
+					prompt = `${prompt}\n\n${c.replaceAll('\n', '\n\n') ?? ''}`;
+				}
 			} else {
 				files = files.filter((item) => item?.itemId !== tempItemId);
 			}

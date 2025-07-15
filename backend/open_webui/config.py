@@ -2876,6 +2876,18 @@ DEEPGRAM_API_KEY = PersistentConfig(
     os.getenv("DEEPGRAM_API_KEY", ""),
 )
 
+AUDIO_STT_PYANNOTE_ENABLE_DIARIZATION = PersistentConfig(
+    "AUDIO_STT_PYANNOTE_ENABLE_DIARIZATION",
+    "audio.stt.pyannote.enable_diarization",
+    os.getenv("AUDIO_STT_PYANNOTE_ENABLE_DIARIZATION", "False").lower() == "true",
+)
+
+AUDIO_STT_HF_TOKEN = PersistentConfig(
+    "AUDIO_STT_HF_TOKEN",
+    "audio.stt.hf_token",
+    os.getenv("AUDIO_STT_HF_TOKEN", ""),
+)
+
 
 AUDIO_STT_OPENAI_API_BASE_URL = PersistentConfig(
     "AUDIO_STT_OPENAI_API_BASE_URL",

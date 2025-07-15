@@ -13,6 +13,7 @@
 	import { config, settings } from '$lib/stores';
 
 	import SensitiveInput from '$lib/components/common/SensitiveInput.svelte';
+	import Switch from '$lib/components/common/Switch.svelte';
 
 	import { TTS_RESPONSE_SPLIT } from '$lib/types';
 
@@ -46,6 +47,8 @@
 	let STT_AZURE_BASE_URL = '';
 	let STT_AZURE_MAX_SPEAKERS = '';
 	let STT_DEEPGRAM_API_KEY = '';
+	let STT_PYANNOTE_ENABLE_DIARIZATION = false;
+	let STT_HF_TOKEN = '';
 
 	let STT_WHISPER_MODEL_LOADING = false;
 
@@ -116,6 +119,8 @@
 				MODEL: STT_MODEL,
 				WHISPER_MODEL: STT_WHISPER_MODEL,
 				DEEPGRAM_API_KEY: STT_DEEPGRAM_API_KEY,
+				PYANNOTE_ENABLE_DIARIZATION: STT_PYANNOTE_ENABLE_DIARIZATION,
+				HF_TOKEN: STT_HF_TOKEN,
 				AZURE_API_KEY: STT_AZURE_API_KEY,
 				AZURE_REGION: STT_AZURE_REGION,
 				AZURE_LOCALES: STT_AZURE_LOCALES,
@@ -167,6 +172,8 @@
 			STT_AZURE_BASE_URL = res.stt.AZURE_BASE_URL;
 			STT_AZURE_MAX_SPEAKERS = res.stt.AZURE_MAX_SPEAKERS;
 			STT_DEEPGRAM_API_KEY = res.stt.DEEPGRAM_API_KEY;
+			STT_PYANNOTE_ENABLE_DIARIZATION = res.stt.PYANNOTE_ENABLE_DIARIZATION;
+			STT_HF_TOKEN = res.stt.HF_TOKEN;
 		}
 
 		await getVoices();
@@ -410,6 +417,43 @@
 								{$i18n.t(
 									`Click here to learn more about faster-whisper and see the available models.`
 								)}
+							</a>
+						</div>
+					</div>
+				{/if}
+
+				<hr class="border-gray-100 dark:border-gray-850 my-2" />
+
+				<div class="flex justify-between items-center text-sm">
+					<div class="font-medium">{$i18n.t('Enable Diarization')}</div>
+
+					<div class="flex items-center">
+						<div class="">
+							<Switch
+								bind:state={STT_PYANNOTE_ENABLE_DIARIZATION}
+							/>
+						</div>
+					</div>
+				</div>
+
+				{#if STT_PYANNOTE_ENABLE_DIARIZATION}
+					<div class="mt-3">
+						<div class=" mb-1.5 text-sm font-medium">{$i18n.t('Hugging Face Token')}</div>
+						<SensitiveInput
+							placeholder={$i18n.t('Hugging Face Token (HF_TOKEN)')}
+							bind:value={STT_HF_TOKEN}
+							required={STT_PYANNOTE_ENABLE_DIARIZATION}
+						/>
+						<div class="mt-2 mb-1 text-xs text-gray-400 dark:text-gray-500">
+							{$i18n.t(
+								'Required for pyannote.audio diarization. Get it from Hugging Face settings.'
+							)}
+							<a
+								class=" hover:underline dark:text-gray-200 text-gray-800"
+								href="https://huggingface.co/settings/tokens"
+								target="_blank"
+							>
+								{$i18n.t('Generate a token here.')}
 							</a>
 						</div>
 					</div>

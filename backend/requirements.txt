@@ -90,6 +90,8 @@ onnxruntime==1.20.1
 
 faster-whisper==1.1.1
 
+pyannote-audio==3.3.2
+
 PyJWT[crypto]==2.10.1
 authlib==1.4.1
 

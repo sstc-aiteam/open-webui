@@ -478,3 +478,20 @@ def convert_logit_bias_input_to_json(user_input):
         bias = 100 if bias > 100 else -100 if bias < -100 else bias
         logit_bias_json[token] = bias
     return json.dumps(logit_bias_json)
+
+
+def format_duration(seconds:float):
+    """
+    Formats a duration in seconds into hh:mm:ss string format.
+    """
+    if seconds is None:
+        return "00:00:00"
+
+    total_seconds = int(seconds) # Ensure it's an integer for calculations
+
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    return f"{hours:02}:{minutes:02}:{seconds:02}"
+
+

@@ -6,6 +6,7 @@ from fnmatch import fnmatch
 from pathlib import Path
 from typing import Optional
 from urllib.parse import quote
+from open_webui.utils.misc import format_duration
 
 from fastapi import (
     APIRouter,
@@ -30,10 +31,9 @@ from open_webui.models.files import (
     Files,
 )
 from open_webui.models.knowledge import Knowledges
-
 from open_webui.routers.knowledge import get_knowledge, get_knowledge_list
 from open_webui.routers.retrieval import ProcessFileForm, process_file
-from open_webui.routers.audio import transcribe
+from open_webui.routers.audio import transcribe, diarize
 from open_webui.storage.provider import Storage
 from open_webui.utils.auth import get_admin_user, get_verified_user
 from pydantic import BaseModel
@@ -88,6 +88,7 @@ def upload_file(
     file: UploadFile = File(...),
     metadata: Optional[dict | str] = Form(None),
     process: bool = Query(True),
+    diarize_audio: bool = Query(False), # New parameter for audio processing
     internal: bool = False,
     user=Depends(get_verified_user),
 ):
@@ -159,11 +160,23 @@ def upload_file(
                         "video/webm"
                     }:
                         file_path = Storage.get_file(file_path)
-                        result = transcribe(request, file_path, file_metadata)
+                        
+                        if diarize_audio or request.app.state.config.AUDIO_STT_PYANNOTE_ENABLE_DIARIZATION:
+                            result = diarize(request, file_path, file_metadata)
+                            # Extract text from diarization result
+                            # format each line as the form of "hh:mm:ss-hh:mm:ss speaker:text"
+                            # e.g. 00:00:00-00:00:05 speaker1:Hello world 
+                            content_to_process = "\n".join([
+                                f"{format_duration(item['start'])}-{format_duration(item['end'])} {item['speaker']}:{item['text']}"
+                                for item in result.get("diarization", [])
+                            ])
+                        else:
+                            result = transcribe(request, file_path, file_metadata)
+                            content_to_process = result.get("text", "")
 
                         process_file(
-                            request,
-                            ProcessFileForm(file_id=id, content=result.get("text", "")),
+                            request, 
+                            ProcessFileForm(file_id=id, content=content_to_process),
                             user=user,
                         )
                     elif (not file.content_type.startswith(("image/", "video/"))) or (
