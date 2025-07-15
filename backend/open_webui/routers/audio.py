@@ -8,6 +8,7 @@ from functools import lru_cache
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict
 from typing import Optional
 
 from fnmatch import fnmatch
@@ -173,6 +174,8 @@ class STTConfigForm(BaseModel):
     SUPPORTED_CONTENT_TYPES: list[str] = []
     WHISPER_MODEL: str
     DEEPGRAM_API_KEY: str
+    PYANNOTE_ENABLE_DIARIZATION: bool
+    HF_TOKEN: str
     AZURE_API_KEY: str
     AZURE_REGION: str
     AZURE_LOCALES: str
@@ -209,6 +212,8 @@ async def get_audio_config(request: Request, user=Depends(get_admin_user)):
             "SUPPORTED_CONTENT_TYPES": request.app.state.config.STT_SUPPORTED_CONTENT_TYPES,
             "WHISPER_MODEL": request.app.state.config.WHISPER_MODEL,
             "DEEPGRAM_API_KEY": request.app.state.config.DEEPGRAM_API_KEY,
+            "PYANNOTE_ENABLE_DIARIZATION": request.app.state.config.AUDIO_STT_PYANNOTE_ENABLE_DIARIZATION,
+            "HF_TOKEN": request.app.state.config.AUDIO_STT_HF_TOKEN,
             "AZURE_API_KEY": request.app.state.config.AUDIO_STT_AZURE_API_KEY,
             "AZURE_REGION": request.app.state.config.AUDIO_STT_AZURE_REGION,
             "AZURE_LOCALES": request.app.state.config.AUDIO_STT_AZURE_LOCALES,
@@ -248,6 +253,8 @@ async def update_audio_config(
 
     request.app.state.config.WHISPER_MODEL = form_data.stt.WHISPER_MODEL
     request.app.state.config.DEEPGRAM_API_KEY = form_data.stt.DEEPGRAM_API_KEY
+    request.app.state.config.AUDIO_STT_PYANNOTE_ENABLE_DIARIZATION = form_data.stt.PYANNOTE_ENABLE_DIARIZATION
+    request.app.state.config.AUDIO_STT_HF_TOKEN = form_data.stt.HF_TOKEN
     request.app.state.config.AUDIO_STT_AZURE_API_KEY = form_data.stt.AZURE_API_KEY
     request.app.state.config.AUDIO_STT_AZURE_REGION = form_data.stt.AZURE_REGION
     request.app.state.config.AUDIO_STT_AZURE_LOCALES = form_data.stt.AZURE_LOCALES
@@ -285,6 +292,8 @@ async def update_audio_config(
             "SUPPORTED_CONTENT_TYPES": request.app.state.config.STT_SUPPORTED_CONTENT_TYPES,
             "WHISPER_MODEL": request.app.state.config.WHISPER_MODEL,
             "DEEPGRAM_API_KEY": request.app.state.config.DEEPGRAM_API_KEY,
+            "PYANNOTE_ENABLE_DIARIZATION": request.app.state.config.AUDIO_STT_PYANNOTE_ENABLE_DIARIZATION,
+            "HF_TOKEN": request.app.state.config.AUDIO_STT_HF_TOKEN,
             "AZURE_API_KEY": request.app.state.config.AUDIO_STT_AZURE_API_KEY,
             "AZURE_REGION": request.app.state.config.AUDIO_STT_AZURE_REGION,
             "AZURE_LOCALES": request.app.state.config.AUDIO_STT_AZURE_LOCALES,
@@ -550,6 +559,138 @@ async def speech(request: Request, user=Depends(get_verified_user)):
             await f.write(json.dumps(payload))
 
         return FileResponse(file_path)
+
+
+def diarization_handler(request, file_path, metadata):
+    try:
+        import torch
+        from pyannote.audio import Pipeline
+    except ImportError:
+        raise ImportError(
+            "pyannote.audio or torch is not installed. Please install it with `pip install torch pyannote.audio`"
+        )
+
+    # Caching models on app.state
+    if not hasattr(request.app.state, "diarization_pipeline"):
+        log.info("Loading pyannote/speaker-diarization-3.1 pipeline...")
+        # This requires a Hugging Face token and accepting the user agreement.
+        # The token should be set as an environment variable (HF_TOKEN).
+        try:
+            pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1", 
+                                                use_auth_token=request.app.state.config.AUDIO_STT_HF_TOKEN)
+            pipeline.to(
+                torch.device(
+                    DEVICE_TYPE if DEVICE_TYPE and DEVICE_TYPE == "cuda" else "cpu"
+                )
+            )
+            request.app.state.diarization_pipeline = pipeline
+        except Exception as e:
+            log.error(f"Failed to load pyannote pipeline: {e}")
+            raise e
+
+    if request.app.state.faster_whisper_model is None:
+        request.app.state.faster_whisper_model = set_faster_whisper_model(
+            request.app.state.config.WHISPER_MODEL
+        )
+
+    whisper_model = request.app.state.faster_whisper_model
+    diarization_pipeline = request.app.state.diarization_pipeline
+
+    log.info(f"Diarizing audio file: {file_path}")
+    diarization = diarization_pipeline(file_path)
+
+    log.info(f"Transcribing audio file: {file_path}")
+    segments, info = whisper_model.transcribe(
+        file_path,
+        word_timestamps=True,
+        language=metadata.get("language") or WHISPER_LANGUAGE,
+    )
+    log.info(
+        "Detected language '%s' with probability %f"
+        % (info.language, info.language_probability)
+    )
+
+    words = []
+    for segment in segments:
+        for word in segment.words:
+            words.append({"word": word.word, "start": word.start, "end": word.end})
+
+    if not words:
+        return {"diarization": []}
+
+    log.info("Aligning transcription with diarization...")
+    speaker_turns = []
+    for turn, _, speaker in diarization.itertracks(yield_label=True):
+        speaker_turns.append({"start": turn.start, "end": turn.end, "speaker": speaker})
+
+    # Assign speaker to each word
+    for word in words:
+        word_middle = word["start"] + (word["end"] - word["start"]) / 2
+
+        # 1. Find a speaker turn that directly contains the word's midpoint
+        containing_turn = next(
+            (turn for turn in speaker_turns if turn["start"] <= word_middle < turn["end"]),
+            None,
+        )
+
+        if containing_turn:
+            word["speaker"] = containing_turn["speaker"]
+        else:
+            # 2. If no turn contains the word, find the chronologically closest turn
+            if not speaker_turns:
+                # If there are no speaker turns at all, we cannot assign a speaker
+                word["speaker"] = "UNKNOWN"
+                continue
+
+            min_distance = float('inf')
+            closest_speaker = "UNKNOWN"
+
+            for turn in speaker_turns:
+                # Calculate the shortest time distance from the word to the turn
+                distance = min(abs(word_middle - turn["start"]), abs(word_middle - turn["end"]))
+                if distance < min_distance:
+                    min_distance = distance
+                    closest_speaker = turn["speaker"]
+            
+            word["speaker"] = closest_speaker
+
+    # Combine words into speaker-based segments
+    result = []
+    if words:
+        current_turn = {
+            "speaker": words[0].get("speaker", "UNKNOWN"), 
+            "text": "",
+            "start": words[0]["start"],
+            "end": words[0]["end"]
+        }
+
+        for i in range(1, len(words)):
+            word = words[i]
+            speaker = word.get("speaker", "UNKNOWN")
+
+            if speaker == current_turn["speaker"]:
+                # If the speaker is the same, extend the current turn
+                current_turn["text"] += word["word"]
+                current_turn["end"] = word["end"]  # Update the end time
+            else:
+                # If the speaker changes, finalize and append the previous turn
+                current_turn["text"] = current_turn["text"].strip()
+                if current_turn["text"]:
+                    result.append(current_turn)
+                
+                # Start a new turn with the current word's data
+                current_turn = {
+                    "speaker": speaker, 
+                    "text": word["word"],
+                    "start": word["start"],
+                    "end": word["end"]
+                }
+
+        current_turn["text"] = current_turn["text"].strip()
+        if current_turn["text"]:
+            result.append(current_turn)
+
+    return {"diarization": result}
 
 
 def transcription_handler(request, file_path, metadata):
@@ -882,6 +1023,29 @@ def transcribe(request: Request, file_path: str, metadata: Optional[dict] = None
     }
 
 
+def diarize(request: Request, file_path: str, metadata: Optional[dict] = None):
+    log.info(f"diarize: {file_path} {metadata}")
+
+    if is_audio_conversion_required(file_path):
+        file_path = convert_audio_to_mp3(file_path)
+
+    try:
+        file_path = compress_audio(file_path)
+    except Exception as e:
+        log.exception(e)
+
+    # For diarization, we process the whole file at once, no chunking.
+    try:
+        result = diarization_handler(request, file_path, metadata)
+        return result
+    except Exception as e:
+        log.exception(e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error during diarization: {e}",
+        )
+
+
 def compress_audio(file_path):
     if os.path.getsize(file_path) > MAX_FILE_SIZE:
         id = os.path.splitext(os.path.basename(file_path))[
@@ -992,6 +1156,69 @@ def transcription(
                 metadata = {"language": language}
 
             result = transcribe(request, file_path, metadata)
+
+            return {
+                **result,
+                "filename": os.path.basename(file_path),
+            }
+
+        except Exception as e:
+            log.exception(e)
+
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=ERROR_MESSAGES.DEFAULT(e),
+            )
+
+    except Exception as e:
+        log.exception(e)
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ERROR_MESSAGES.DEFAULT(e),
+        )
+
+
+@router.post("/diarize")
+def diarize_transcription(
+    request: Request,
+    file: UploadFile = File(...),
+    language: Optional[str] = Form(None),
+    user=Depends(get_verified_user),
+):
+    log.info(f"file.content_type: {file.content_type}")
+
+    SUPPORTED_CONTENT_TYPES = {"video/webm"}  # Extend if you add more video types!
+    if not (
+        file.content_type.startswith("audio/")
+        or file.content_type in SUPPORTED_CONTENT_TYPES
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=ERROR_MESSAGES.FILE_NOT_SUPPORTED,
+        )
+
+    try:
+        ext = file.filename.split(".")[-1]
+        id = uuid.uuid4()
+
+        filename = f"{id}.{ext}"
+        contents = file.file.read()
+
+        file_dir = f"{CACHE_DIR}/audio/transcriptions"
+        os.makedirs(file_dir, exist_ok=True)
+        file_path = f"{file_dir}/{filename}"
+
+        with open(file_path, "wb") as f:
+            f.write(contents)
+
+        try:
+            metadata = None
+
+            if language:
+                metadata = {"language": language}
+
+            result = diarize(request, file_path, metadata)
 
             return {
                 **result,

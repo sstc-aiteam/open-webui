@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Optional
 from urllib.parse import quote
 import asyncio
+from open_webui.utils.misc import format_duration
 
 from fastapi import (
     BackgroundTasks,
@@ -37,7 +38,7 @@ from open_webui.models.knowledge import Knowledges
 
 from open_webui.routers.knowledge import get_knowledge, get_knowledge_list
 from open_webui.routers.retrieval import ProcessFileForm, process_file
-from open_webui.routers.audio import transcribe
+from open_webui.routers.audio import transcribe, diarize
 from open_webui.storage.provider import Storage
 from open_webui.utils.auth import get_admin_user, get_verified_user
 from pydantic import BaseModel
@@ -102,12 +103,26 @@ def process_uploaded_file(request, file, file_path, file_item, file_metadata, us
                 )
             ):
                 file_path = Storage.get_file(file_path)
-                result = transcribe(request, file_path, file_metadata)
+
+                content_to_process = ""
+                diarize_audio = request.query_params.get("diarize_audio", "false").lower() == "true"
+                if diarize_audio or request.app.state.config.AUDIO_STT_PYANNOTE_ENABLE_DIARIZATION:
+                    result = diarize(request, file_path, file_metadata)
+                    # Extract text from diarization result
+                    # format each line as the form of "hh:mm:ss-hh:mm:ss speaker:text"
+                    # e.g. 00:00:00-00:00:05 speaker1:Hello world 
+                    content_to_process = "\n".join([
+                        f"{format_duration(item['start'])}-{format_duration(item['end'])} {item['speaker']}:{item['text']}"
+                        for item in result.get("diarization", [])
+                    ])
+                else:
+                    result = transcribe(request, file_path, file_metadata)
+                    content_to_process = result.get("text", "")
 
                 process_file(
                     request,
                     ProcessFileForm(
-                        file_id=file_item.id, content=result.get("text", "")
+                        file_id=file_item.id, content=content_to_process
                     ),
                     user=user,
                 )
@@ -158,6 +173,8 @@ def upload_file_handler(
     metadata: Optional[dict | str] = Form(None),
     process: bool = Query(True),
     process_in_background: bool = Query(True),
+    diarize_audio: bool = Query(False), # New parameter for audio processing
+    internal: bool = False,
     user=Depends(get_verified_user),
     background_tasks: Optional[BackgroundTasks] = None,
 ):

@@ -539,3 +539,19 @@ def extract_urls(text: str) -> list[str]:
         r"(https?://[^\s]+)", re.IGNORECASE
     )  # Matches http and https URLs
     return url_pattern.findall(text)
+
+def format_duration(seconds:float):
+    """
+    Formats a duration in seconds into hh:mm:ss string format.
+    """
+    if seconds is None:
+        return "00:00:00"
+
+    total_seconds = int(seconds) # Ensure it's an integer for calculations
+
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    return f"{hours:02}:{minutes:02}:{seconds:02}"
+
+
