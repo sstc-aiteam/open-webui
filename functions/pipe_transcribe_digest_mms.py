@@ -11,6 +11,8 @@ from urllib.parse import urlencode
 from open_webui.models.users import Users
 from open_webui.utils.chat import generate_chat_completion
 
+# Deprecated
+# upload audio file to a ASR service and get the STT (speech-to-test) result
 
 class Pipe:
     class Valves(BaseModel):
